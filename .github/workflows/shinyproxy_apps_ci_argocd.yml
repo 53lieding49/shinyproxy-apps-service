@@ -45,16 +45,23 @@ jobs:
     name: Deploy shinyproxy apps' manifests into GCP by running argocd docker container inside gubhub runner docker container
     runs-on:
       - "self-hosted" # must match the labels defined for a github runner
-    container:
-      image: quay.io/argoproj/argocd:v3.5.3
+    # container:
+    #  image: quay.io/argoproj/argocd:v3.5.3
       # options: --user root   # Forces the container to run as root, not as argocd. argocd login does not work due to an error cannot open /__w/_temp
 
     steps:
+    - name: Install ArgoCD CLI
+      run: |
+        curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+        chmod +x argocd
+        sudo mv argocd /usr/local/bin/argocd
+
     - name: argocd app sync to load the latest manifests in plaintext yaml from a remote git repository on github into a registered argocd app shinyproxy-apps
+      id: sync_step
       run: |
         argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
         argocd app sync shinyproxy-apps
 
     - name: argocd logout
-      if: always()
+      if: steps.sync_step.conclusion == 'success'
       run: argocd logout
