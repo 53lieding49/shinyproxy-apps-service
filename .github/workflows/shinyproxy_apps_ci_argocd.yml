@@ -33,11 +33,10 @@ jobs:
         with:
           # Required for push events to compare against the previous state of the branch
           base: ${{ github.ref }} 
-          # Define your distinct Terraform project folders here
           list-files: json
           filters: |
-            manifests: 
-              - "*.yaml"
+            shinyproxy-apps-updated-manifests: 
+              - "manifests/*.yaml"
 
   # deploy into GCP whenever any changes related to Kubernetes manifests in yaml is detected.
   shinyproxy-apps-deploy:
