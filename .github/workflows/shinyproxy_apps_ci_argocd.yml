@@ -64,4 +64,4 @@ jobs:
 
     - name: argocd logout
       if: steps.sync_step.conclusion == 'success'
-      run: argocd logout ${{ secrets.ARGOCD_SERVER }}
+      run: argocd logout ${{ secrets.ARGOCD_SERVER }} --insecure
