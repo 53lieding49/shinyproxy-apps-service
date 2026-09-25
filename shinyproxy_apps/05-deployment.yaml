@@ -22,6 +22,11 @@ data:
           description: Application which demonstrates the basics of a Shiny app
           container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
           container-image: openanalytics/shinyproxy-demo
+        - id: shiny_sliders_demo
+          display-name: sliders Application
+          description: Application which demonstrates sliders of a Shiny app
+          container-image: rocker/shiny:4.6.0
+          container-cmd: [ "R", "-e", "shiny::runApp('/srv/shiny-server/05_sliders', host='0.0.0.0', port=3838)" ]
     server:
       port: 80
       useForwardHeaders: true
