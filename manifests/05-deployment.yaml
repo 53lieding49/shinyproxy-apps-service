@@ -18,7 +18,7 @@ data:
 
       specs:
         - id: 01_hello
-          display-name: Hello shiny pplication
+          display-name: Hello shiny application
           description: Demonstration for a simple Shiny app
           container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
           container-image: openanalytics/shinyproxy-demo
