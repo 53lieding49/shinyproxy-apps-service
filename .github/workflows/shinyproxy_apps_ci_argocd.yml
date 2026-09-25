@@ -46,8 +46,8 @@ jobs:
     runs-on:
       - "self-hosted" # must match the labels defined for a github runner
     container:
-      image: quay.io/argoproj/argocd:v2.12.3
-      options: --user 0   # Forces the container to run as root, not as argocd. argocd login does not work due to an error cannot open /__w/_temp
+      image: quay.io/argoproj/argocd:v3.5.3
+      options: --user 0:0   # Forces the container to run as root, not as argocd. argocd login does not work due to an error cannot open /__w/_temp
 
     steps:
     - name: argocd app sync to load the latest manifests in plaintext yaml from a remote git repository on github into a registered argocd app shinyproxy-apps
