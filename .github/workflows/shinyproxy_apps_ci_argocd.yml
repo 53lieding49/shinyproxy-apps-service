@@ -1,0 +1,60 @@
+name: Automate deployments for shinyproxy apps into GCP shinyproxy-cluster using argocd
+
+# workflow applicable for push and pull requests gitops to all branches.
+on:
+  push:
+  pull_request:
+
+# GitHub will trigger two identical workflow runs whenever you push a commit 
+# to an active feature branch that has an open Pull Request.
+# To prevent duplicate runs, confugure a concurrency group.
+# This cancels the older in-progress run on the same branch when a new update comes in.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Detect which folders contain changed .yaml manifests
+  changes:
+    name: Detect any changes related to Kubernetes manifests in yaml
+    runs-on:
+      - "self-hosted"
+    outputs:
+      directories: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Fetch all history so git diff can compare commits accurately
+          fetch-depth: 0 
+
+      - name: Filter changed paths
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          # Required for push events to compare against the previous state of the branch
+          base: ${{ github.ref }} 
+          # Define your distinct Terraform project folders here
+          list-files: json
+          filters: |
+            manifests: 
+              - "*.yaml"
+
+  # deploy into GCP whenever any changes related to Kubernetes manifests in yaml is detected.
+  shinyproxy-apps-deploy:
+    needs: changes
+    if: ${{ needs.changes.outputs.directories != '[]' }}
+    name: Deploy shinyproxy apps' manifests into GCP by running argocd docker container inside gubhub runner docker container
+    runs-on:
+      - "self-hosted" # must match the labels defined for a github runner
+    container:
+      image: quay.io/argoproj/argocd:v2.12.3  
+
+    steps:
+    - name: argocd app sync to load the latest manifests in plaintext yaml from a remote git repository on github into a registered argocd app shinyproxy-apps
+      run: |
+        argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+        argocd app sync shinyproxy-apps
+
+    - name: argocd logout
+      if: always()
+      run: argocd logout
