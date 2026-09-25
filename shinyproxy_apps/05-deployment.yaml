@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: shinyproxy-apps
   name: shinyproxy-config
 data:
   application.yml: |
@@ -8,6 +9,7 @@ data:
       container-wait-time: 600000 # Wait up to 10 minutes for the app to be reachable
       container-backend: kubernetes
       kubernetes:
+        namespace: shinyproxy-apps
         image-pull-policy: IfNotPresent
         pod-wait-time: 600000 # Time in milliseconds (e.g., 2 minutes)
       title: Kubernetes clustered Shiny platform  
@@ -38,6 +40,7 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: shinyproxy-apps
   name: shinyproxy
 spec:
   replicas: 1

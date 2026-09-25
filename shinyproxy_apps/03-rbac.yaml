@@ -1,6 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  namespace: shinyproxy-apps
   name: shinyproxy-pod-creator
 rules:
 - apiGroups: [""]
@@ -10,10 +11,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
+  namespace: shinyproxy-apps
   name: shinyproxy-pod-creator-binding
 subjects:
 - kind: ServiceAccount
-  name: default  # The name from your error: shiny-app:default
+  name: default
+  namespace: shinyproxy-apps
 roleRef:
   kind: Role
   name: shinyproxy-pod-creator
