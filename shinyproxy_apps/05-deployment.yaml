@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shinyproxy-config
+data:
+  application.yml: |
+    proxy:
+      container-wait-time: 600000 # Wait up to 10 minutes for the app to be reachable
+      container-backend: kubernetes
+      kubernetes:
+        image-pull-policy: IfNotPresent
+        pod-wait-time: 600000 # Time in milliseconds (e.g., 2 minutes)
+      title: Kubernetes clustered Shiny platform  
+      landing-page: /
+      authentication: none
+
+      specs:
+        - id: 01_hello
+          display-name: Hello Application
+          description: Application which demonstrates the basics of a Shiny app
+          container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
+          container-image: openanalytics/shinyproxy-demo
+    server:
+      port: 80
+      useForwardHeaders: true
+      forward-headers-strategy: native
+      servlet:
+        # shinyproxy no longer serves on a root path /
+        # it serves on a hash path to enhance security when none authentication.
+        context-path: /sIud2k8TAaEs
+        session:
+          # Automatically destroy local idle sessions quickly (e.g., 15 minutes)
+          timeout: 15m
+    logging:
+      file:
+        shinyproxy.log
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shinyproxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shinyproxy
+  template:
+    metadata:
+      labels:
+        app: shinyproxy
+    spec:
+      containers:
+      - name: shinyproxy
+        image: openanalytics/shinyproxy:3.2.4  # Use the latest stable version
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config-volume
+          mountPath: /opt/shinyproxy/application.yml
+          subPath: application.yml
+      volumes:
+      - name: config-volume
+        configMap:
+          name: shinyproxy-config
+          items:
+          - key: application.yml
+            path: application.yml
