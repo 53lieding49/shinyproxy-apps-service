@@ -47,6 +47,7 @@ jobs:
       - "self-hosted" # must match the labels defined for a github runner
     # container:
     #  image: quay.io/argoproj/argocd:v3.5.3
+    # dind has an issue cannot open /__w/_temp when argocd login
       # options: --user root   # Forces the container to run as root, not as argocd. argocd login does not work due to an error cannot open /__w/_temp
 
     steps:
@@ -56,12 +57,17 @@ jobs:
         chmod +x argocd
         sudo mv argocd /usr/local/bin/argocd
 
-    - name: argocd app sync to load the latest manifests in plaintext yaml from a remote git repository on github into a registered argocd app shinyproxy-apps
-      id: sync_step
+    - name: argocd login
+      id: login_step
       run: |
-        argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_USERNAME }} --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+        argocd login ${{ secrets.ARGOCD_SERVER }} \
+        --username ${{ secrets.ARGOCD_USERNAME }} \
+        --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+
+    - name: argocd app sync to load the latest manifests in plaintext yaml from a remote git repository on github into a registered argocd app shinyproxy-apps
+      run: |
         argocd app sync shinyproxy-apps
 
     - name: argocd logout
-      if: steps.sync_step.conclusion == 'success'
+      if: steps.login_step.conclusion == 'success'
       run: argocd logout ${{ secrets.ARGOCD_SERVER }} --insecure
