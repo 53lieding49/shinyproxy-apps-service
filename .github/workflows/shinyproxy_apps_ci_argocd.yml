@@ -37,6 +37,7 @@ jobs:
           filters: |
             shinyproxy-apps-updated-manifests: 
               - "manifests/*.yaml"
+              - ".github/workflows/**"
 
   # deploy into GCP whenever any changes related to Kubernetes manifests in yaml is detected.
   shinyproxy-apps-deploy:
