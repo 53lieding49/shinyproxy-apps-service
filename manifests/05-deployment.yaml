@@ -22,7 +22,7 @@ data:
           description: Demonstration for a simple shiny app
           container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
           container-image: openanalytics/shinyproxy-demo
-        - id: 02_shiny_sliders
+        - id: 02_sliders
           display-name: Sliders shiny application
           description: Demonstration for a shiny app with sliders
           container-image: rocker/shiny:4.6.0
