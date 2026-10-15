@@ -6,7 +6,7 @@ metadata:
   labels:
     app: shinyproxy
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: shinyproxy
   ports:
