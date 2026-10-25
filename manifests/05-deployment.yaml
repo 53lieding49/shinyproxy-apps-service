@@ -58,7 +58,7 @@ data:
       servlet:
         # shinyproxy no longer serves on a root path /
         # it serves on a hash path to enhance security when none authentication.
-        context-path: /sIud2k8TAaEs
+        context-path: /
         session:
           # Automatically destroy local idle sessions quickly (e.g., 15 minutes)
           timeout: 15m
