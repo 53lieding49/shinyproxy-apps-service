@@ -14,7 +14,30 @@ data:
         pod-wait-time: 600000 # Time in milliseconds (e.g., 10 minutes)
       title: Kubernetes clustered Shiny platform  
       landing-page: /
-      authentication: none
+      authentication: openid
+
+      openid:
+        fabric: keycloak
+        login-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/auth
+        token-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/token
+        jwks-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/certs
+        logout-url: http://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/logout?redirect_uri=https://shiny.lieding.name/
+        client-id: shinyproxy
+        client-secret: IfkW8PKOdn6BB287a57OO7ARTTiWQGArIr1MrG2GaNgOeD4zKCnrW8rRJopkMx2o5oZSAyIXM639cvGYXnmzL7
+        
+        # Maps Keycloak group/role token claims to ShinyProxy 
+        roles-claim: roles
+
+        scopes:
+          - openid
+          - profile
+          - email
+          - roles
+        username-attribute: preferred_username
+        groups-attribute: groups
+      admin-users: [lieding@lieding.name]
+      admin-groups:
+        - super
 
       specs:
         - id: 01_hello
@@ -22,6 +45,7 @@ data:
           description: Demonstration for a simple shiny app
           container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
           container-image: openanalytics/shinyproxy-demo
+          access-groups: [super, infra]
         - id: 02_sliders
           display-name: Sliders shiny application
           description: Demonstration for a shiny app with sliders
