@@ -18,7 +18,7 @@ data:
 
       openid:
         fabric: keycloak
-        login-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/auth
+        auth-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/auth
         token-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/token
         jwks-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/certs
         logout-url: http://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/logout?redirect_uri=https://shiny.lieding.name/
