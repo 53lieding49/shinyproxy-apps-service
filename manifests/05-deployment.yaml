@@ -69,6 +69,11 @@ data:
     logging:
       file:
         shinyproxy.log
+      level:
+        eu:
+          openanalytics:
+            containerproxy:
+              auth: DEBUG
 ---
 apiVersion: apps/v1
 kind: Deployment
