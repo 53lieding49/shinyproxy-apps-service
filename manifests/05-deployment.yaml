@@ -26,7 +26,7 @@ data:
         client-secret: IfkW8PKOdn6BB287a57OO7ARTTiWQGArIr1MrG2GaNgOeD4zKCnrW8rRJopkMx2o5oZSAyIXM639cvGYXnmzL7
         
         # Maps Keycloak group/role token claims to ShinyProxy 
-        roles-claim: roles
+        roles-claim: groups
 
         scopes:
           - openid
@@ -38,7 +38,7 @@ data:
       admin-users: 
         - lieding@lieding.name
       admin-groups:
-        - super
+        - SUPER
 
       specs:
         - id: 01_hello
@@ -47,8 +47,8 @@ data:
           container-cmd: [ "R", "-e", "shinyproxy::run_01_hello()" ]
           container-image: openanalytics/shinyproxy-demo
           access-groups: 
-            - super
-            - infra
+            - SUPER
+            - INFRA
         - id: 02_sliders
           display-name: Sliders shiny application
           description: Demonstration for a shiny app with sliders
