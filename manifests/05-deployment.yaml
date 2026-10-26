@@ -18,10 +18,10 @@ data:
 
       openid:
         fabric: keycloak
-        auth-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/auth
-        token-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/token
-        jwks-url: https://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/certs
-        logout-url: http://keycloak.lieding.name/realms/shinyproxy-realm/protocol/openid-connect/logout?id_token_hint=#{oidcUser.idToken.tokenValue}&post_logout_redirect_uri=https://shiny.lieding.name/logout-success
+        auth-url: https://keycloak.lieding.name/realms/nitro-realm/protocol/openid-connect/auth
+        token-url: https://keycloak.lieding.name/realms/nitro-realm/protocol/openid-connect/token
+        jwks-url: https://keycloak.lieding.name/realms/nitro-realm/protocol/openid-connect/certs
+        logout-url: http://keycloak.lieding.name/realms/nitro-realm/protocol/openid-connect/logout?id_token_hint=#{oidcUser.idToken.tokenValue}&post_logout_redirect_uri=https://shiny.lieding.name/logout-success
         client-id: shinyproxy
         client-secret: IfkW8PKOdn6BB287a57OO7ARTTiWQGArIr1MrG2GaNgOeD4zKCnrW8rRJopkMx2o5oZSAyIXM639cvGYXnmzL7
         
